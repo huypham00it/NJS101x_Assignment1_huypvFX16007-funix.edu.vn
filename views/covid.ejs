@@ -1,0 +1,70 @@
+<%- include('./includes/head.ejs') %>
+<h1>Thông tin Covid cá nhân</h1>
+<a href="/covid-details">Xem chi tiết</a>
+
+<div class="covid-wrapper">
+  <section>
+    <h3 class="section-heading">Đắng ký thông tin thân nhiệt</h3>
+    <form action="/covid?type=temperature" method="POST">
+      <div class="form-group">
+        <label for="temperature">Nhiệt độ cơ thể</label>
+        <input
+          required
+          type="number"
+          class="form-control"
+          id="temperature"
+          name="temperature"
+          placeholder="Nhập nhiệt độ"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Đăng ký</button>
+    </form>
+  </section>
+  <section>
+    <h3 class="section-heading">Đắng ký thông tin dương tính Covid</h3>
+    <form action="/covid?type=positive" method="POST">
+      <div class="form-group">
+        <label for="temperature">Ngày phát hiện dương tính</label>
+        <input
+          required
+          type="date"
+          class="form-control"
+          id="positive"
+          name="positive"
+          placeholder="Ngày dương tính"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Đăng ký</button>
+    </form>
+  </section>
+  <section>
+    <h3 class="section-heading">Đắng ký thông tin tiêm vaccine</h3>
+    <form action="/covid?type=vaccine" id="vaccine-details" method="POST">
+      <h4>Mũi <%= vaccine.length + 1 %> </h4>
+      <div class="form-group">
+        <label for="vaccineDate1">Ngày tiêm Vaccine</label>
+        <input
+          required
+          type="date"
+          class="form-control"
+          id="vaccineDate"
+          name="vaccineDate"
+        />
+      </div>
+      <div class="form-group">
+        <label for="vaccineName1">Tên Vaccine</label>
+        <input
+          required
+          type="text"
+          class="form-control"
+          id="vaccineName"
+          name="vaccineName"
+          placeholder="Tên vaccine"
+        />
+      </div>
+      <input type="hidden" name="vaccineType1" value="1">
+      <button type="submit">Đăng ký</button>
+    </form>
+  </section>
+</div>
+<%- include('./includes/footer.ejs') %>

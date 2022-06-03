@@ -1,0 +1,102 @@
+<%- include('./includes/head.ejs') %>
+<div class="absence-wrapper">
+  <h1>Đăng ký nghỉ phép</h1>
+  <h2><%= user.name %></h2>
+  <h3>Số ngày nghỉ còn lại: <%= Math.floor(user.annualLeave) %></h3>
+  <% if( Math.floor(user.annualLeave) > 0) {%>
+  <div class="absence-select">
+    <form action="/absence" method="POST">
+      <div class="select-type">
+        <div class="form-group">
+          <label for="day-selected">Theo ngày</label>
+          <input type="radio" id="day-selected" name="type" value="1" checked />
+        </div>
+        <div class="form-group">
+          <label for="hour">Theo giờ</label>
+          <input type="radio" id="hour-selected" name="type" value="0" />
+        </div>
+      </div>
+      <input type="checkbox" name="select-day" id="select-days" checked />
+      <div class="form-group hours">
+        <label for="date">Chọn ngày nghỉ</label>
+        <input
+          type="date"
+          class="form-control"
+          id="date"
+          name="date"
+          autocomplete="off"
+        />
+      </div>
+      <div class="form-group hours">
+        <label for="hours">Số giờ nghỉ</label>
+        <input
+          type="number"
+          class="form-control"
+          id="hours"
+          name="hours"
+          max="8"
+          min="1"
+          step="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="form-group dates">
+        <label for="dates">Chọn những ngày nghỉ</label>
+        <input id="dates" name="dates" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label for="reason">Lý do</label>
+        <input
+          type="text"
+          class="form-control"
+          id="reason"
+          name="reason"
+          required
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="btn">Đăng ký</button>
+    </form>
+  </div>
+  <% }else { %>
+  <h3>Bạn đã hết nghỉ phép năm nay</h3>
+  <% } %>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <link
+    href="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://code.jquery.com/ui/1.12.1/themes/pepper-grinder/jquery-ui.css"
+    rel="stylesheet"
+  />
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.js"></script>
+  <script>
+    $( document ).ready(function() {
+      var getBlockDates = '<%-disabledDates%>';
+      const maxPicks = '<%-Math.floor(user.annualLeave)%>';
+      const blockDates = getBlockDates.split(',').map(item => {
+        return new Date(item);
+      });
+
+    $('#dates').multiDatesPicker({
+      addDisabledDates: blockDates,
+      maxPicks: maxPicks,
+    });
+    
+    $('input[name="type"]').each(function(){
+        $(this).click(function(){
+            if($(this).val() == 1){
+                $('#select-days').prop('checked', true);
+            }else {
+                $('#select-days').prop('checked', false);
+            }
+        })
+    });
+});
+
+  </script>
+</div>
+<%- include('./includes/footer.ejs') %>

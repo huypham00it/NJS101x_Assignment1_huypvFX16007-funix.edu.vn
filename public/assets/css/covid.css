@@ -1,0 +1,73 @@
+.right-container {
+    justify-content: flex-start;
+}
+
+h1 {
+    margin-bottom: 40px;
+    font-family:"Barlow", sans-serif;
+    text-transform: uppercase;
+}
+
+h3 {
+    margin-bottom: 20px;
+}
+
+.covid-wrapper {
+    max-width: 600px;
+    padding: 10px;
+    margin: 0 auto;
+    text-align: left;
+    color: #6d6d7c;
+}
+
+section {
+    padding: 20px 0;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 6px 8px;
+    outline: none;
+    border: 1px solid #ccc;
+}
+
+label {
+    margin-bottom: 8px;
+    display: block;
+}
+
+.covid-wrapper button {
+    width: 100%;
+    padding: 6px 8px;
+    outline: none;
+    border: 1px solid #ccc;
+    background-color: #ff561d;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.covid-wrapper button:hover {
+    background-color: #ff7d4d;
+}
+
+select#vaccineNum {
+    width: 100%;
+    padding: 6px 8px;
+    outline: none;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+h4 {
+    margin: 5px 0;
+}
+
+

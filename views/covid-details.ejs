@@ -1,0 +1,72 @@
+<%- include('./includes/head.ejs') %>
+<h1>Thông tin Covid cá nhân</h1>
+    <h2><%= user.name %></h2>
+
+    <div class="covid-detail-wrapper">
+        <section class="temperature">
+            <h3>Nhiệt độ cơ thể</h3>
+            <div class="covid-detail">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ngày đăng ký</th>
+                            <th>Nhiệt độ cơ thể</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% covid.bodyTemperatures.forEach(item => { %>
+                            <tr>
+                                <td><%= item.date.toLocaleDateString() %></td>
+                                <td><%= item.value %> <sup>o</sup>C</td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+        </section>
+        <section class="vaccine">
+            <h3>Tiêm vaccine</h3>
+            <div class="covid-detail">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ngày tiêm</th>
+                            <th>Loại mũi vaccine</th>
+                            <th>Tên vaccine</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                        <% covid.vaccine.forEach((item, index) => { %>
+                            <% if(item.name) { %>
+                                <tr>
+                                    <td><%= item.date.toLocaleDateString() %></td>
+                                    <td>Mũi <%= (index + 1) %></td>
+                                    <td><%= item.name %></td>
+                                </tr>
+                            <% } %>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="positive">
+            <h3>Dương tính Covid</h3>
+            <div class="covid-detail">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ngày dương tính</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% covid.positive.forEach(item => { %>
+                            <tr>
+                                <td><%= item.date.toLocaleDateString() %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+<%- include('./includes/footer.ejs') %>

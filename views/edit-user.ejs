@@ -1,0 +1,25 @@
+<%- include('./includes/head.ejs') %>
+    <div class="wrapper">
+        <div class="user-info">
+            <h1><%= user.name %></h1>
+            <h3>ID: <%= user._id %></h3>
+            <p>DOB: <%= user.dob.toLocaleDateString() %></p>
+            <p>SalaryScale: <%= user.salaryScale %></p>
+            <% const startDate  = new Date(user.startDate) %>
+            <p>Start Date: <%= startDate.getDate() %>/<%= startDate.getMonth() %>/<%= startDate.getFullYear() %></p>
+            <p>Department: <%= user.department %></p>
+            <p>AnnualLeave: <%= user.annualLeave %></p>
+        </div>
+        <div class="user-image">
+            <div class="preview-avatar">
+                <img class="preview" src="<%= user.image %>" alt="<%= user.name %>"/>
+            </div>
+            <form action="/edit-user" method="Post">
+                <input type="text" name="image" id="image" value="<%= user.image %>">
+                <input type="hidden" name="id" value="<%= user._id %>">
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    <script src="/assets/js/edit-user.js"></script>
+<%- include('./includes/footer.ejs') %>

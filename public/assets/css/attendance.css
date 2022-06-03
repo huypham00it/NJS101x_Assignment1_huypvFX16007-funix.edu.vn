@@ -1,0 +1,64 @@
+h1, h2 {
+    margin-bottom: 30px;
+}
+
+.start select,
+input[type="submit"] {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+input[type="submit"] {
+    background-color: #ff561d;
+    cursor: pointer;
+    color: #fff;
+}
+
+input[type="submit"]:hover {
+    background-color: #ff7d4d;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.attendance-details {
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+.attendance-details-footer a{
+    color: #000;
+    text-decoration: none;
+    padding-top: 20px;
+    display: inline-block;
+}
+
+.attendance-details-footer a:hover {
+    text-decoration: underline;
+}
+
+.absence-wrapper {
+    margin-top: 50px;
+}
+
+.absence-wrapper a {
+    background-color: transparent;
+    color: #000;
+}
+
+.absence-wrapper a:hover {
+    background-color: #ff561d;
+    color: #fff;
+}

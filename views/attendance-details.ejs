@@ -1,0 +1,44 @@
+<%- include('./includes/head.ejs') %>
+    <h2>Ngày: <%= attendance.date %></h2>
+    <div class="attendance-details">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nơi làm việc</th>
+                    <th>Giờ bắt đầu</th>
+                    <th>Giờ kết thúc</th>
+                    <th>Thời gian làm việc</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% attendance.details.forEach(item => { %>
+                    <tr>
+                        <td><%= item.workplace %></td>
+                        <td><%= item.startTime.toLocaleTimeString() %></td>
+                        <% if(item.endTime) { %>
+                            <td><%= item.endTime.toLocaleTimeString() %></td>
+                            <td><%= ((item.endTime - item.startTime)/(3600 * 1000)).toFixed(1) %></td>
+                        <% }else { %>
+                            <td>--</td>
+                            <td>--</td>
+                        <%} %>
+                    </tr>
+                <% }) %>
+                <% if(attendance.details[0].endTime){ %>
+                    <tr class="total">
+                        <% const totalTime = attendance.details.reduce((total, detail) => {return total + ((detail.endTime - detail.startTime))/(3600 *1000)},0) %>
+                        <td colspan="4">Tổng thời gian làm việc: <%= totalTime.toFixed(1) %></td>
+                    </tr>
+                <% }else { %>
+                    <tr class="total">
+                        <td colspan="4">Chưa kết thúc công việc</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="attendance-details-footer">
+        <a href="/">Quay lại</a>
+    </div>
+<%- include('./includes/footer.ejs') %>

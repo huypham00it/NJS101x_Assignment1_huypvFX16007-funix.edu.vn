@@ -1,0 +1,8 @@
+<tr class="total">
+    <% if(totalTime > 8) { %>
+        <td colspan="2">Giờ làm thêm: <%= (totalTime - 8).toFixed(1) %></td>
+    <% }else { %>
+        <td colspan="2">Giờ làm thiếu: <%= (8 - totalTime).toFixed(1) %></td>
+    <% } %>
+    <td colspan="2">Tổng giờ làm: <%= totalTime %></td>
+</tr>

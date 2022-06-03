@@ -1,0 +1,56 @@
+h1,
+h3 {
+    margin-bottom: 20px;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.user-info p {
+    line-height: 2;
+    text-align: left;
+}
+
+.user-image .preview-avatar{
+    width: 225px;
+    height: 300px;
+    margin: 0 auto 20px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+.preview-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-image input {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.user-image button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.user-image button:hover {
+    background-color: #45a049;
+    color: #fff;
+}
+
+@media screen and (max-width: 992px){
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .user-info {
+        margin-bottom: 10px;
+    }
+}

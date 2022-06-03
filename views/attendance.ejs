@@ -1,0 +1,25 @@
+<%- include('./includes/head.ejs') %>
+    <% if(!user.isWorking){ %>
+        <div class="start">
+            <h1>Bắt đầu công việc</h1>
+            <form action="/attendance?type=start" method="POST">
+                <select name="workplace" id="workplace" required>
+                    <option value="Công ty">Công Ty</option>
+                    <option value="Nhà">Nhà</option>
+                    <option value="Khách Hàng">Khách Hàng</option>
+                </select>
+                <input type="submit" value="Bắt đầu">
+            </form>
+        </div>
+        <div class="absence-wrapper">
+            <a href="/absence" class="btn">Đăng ký nghỉ phép</a>
+        </div>
+    <% } else { %>
+        <div class="stop">
+            <h1>Kết thúc công việc</h1>
+            <form action="/attendance?type=stop" method="POST">
+                <input type="submit" value="Kết thúc">
+            </form>
+        </div>
+    <% } %>
+<%- include('./includes/footer.ejs') %>

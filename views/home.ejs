@@ -1,0 +1,35 @@
+<%- include('./includes/head.ejs') %>
+        <div class="info-head">
+          <span class="info-head__name"><%= user.name %></span>
+          <img src="/assets/images/avatar.jpg" alt="" class="info-head__avatar">
+          <div class="info-head__date">
+            <div class="head-date">
+              <% const date = Math.floor((new Date() - new Date(user.startDate))/(24*60*60*1000))  %>
+              <span class="head-date__number"><%= date %></span>
+              <div class="head-date__text">Ngày Làm Việc</div>
+            </div>
+          </div>
+        </div>
+        <div class="info-status">
+          <h2 class="title">Trạng Thái</h2>
+          <% if(!user.isWorking){ %>
+            <div class="info-status__icon stop">
+            </div>
+            <div class="info-status__text stop">
+              <span>Không làm việc</span>
+            </div>
+          <% } else { %>
+            <div class="info-status__icon working">
+            </div>
+            <div class="info-status__text working">
+              <span>Đang làm việc</span>
+            </div>
+          <% } %>
+          <h2 class="title">Nơi làm việc</h2>
+            <div class="info-status__text <%= user.isWorking ? 'working': 'stop' %>">
+              <span><%= user.workplace %></span>
+            </div>
+        </div>
+      </div>
+    </div>
+<%- include('./includes/footer.ejs') %>

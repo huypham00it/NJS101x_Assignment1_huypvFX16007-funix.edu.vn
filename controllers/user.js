@@ -84,15 +84,16 @@ exports.getStatisticSearch = function (req, res, next) {
   req.user
     .getStatistic()
     .then((statistics) => {
-      var currStatistic = []
+      var currStatistic = [],
+      attendStatistic = [],
+      absentStatistic = [];
       if(type == 'date'){
         // Search by date
-        currStatistic = statistics.filter(
-          (item) => Attendance.checkSearch(decodeURIComponent(search), item.date.toString()) && item.attend
-        );
-        if (currStatistic.length > 0) {
+        attendStatistic = statistics.filter(item =>  Attendance.checkSearch(search, item.date.toString()) && item.attend);
+        absentStatistic = statistics.filter(item => Attendance.checkSearch(search, item.date.toString()) && !item.attend);
+        if (attendStatistic.length > 0) {
           // Check finished/not finished
-          currStatistic.forEach((item) => {
+          attendStatistic.forEach((item) => {
             if (!item.details[0].endTime) {
               item.totalTime = "Chưa kết thúc";
             } else {
@@ -105,19 +106,20 @@ exports.getStatisticSearch = function (req, res, next) {
               item.underTime = item.totalTime < 8 ? 8 - item.totalTime : 0;
             }
           });
-          const totalTime = currStatistic.reduce(
+          const totalTime = attendStatistic.reduce(
             (sum, item) => sum + item.totalTime,
             0
           );
-          const overTime = currStatistic.reduce(
+          const overTime = attendStatistic.reduce(
             (sum, item) => sum + item.overTime,
             0
           );
-          const underTime = currStatistic.reduce(
+          const underTime = attendStatistic.reduce(
             (sum, item) => sum + item.underTime,
             0
           );
   
+          currStatistic = [...attendStatistic, ...absentStatistic];
           if (typeof totalTime === "string") {
             currStatistic.salary = "Chưa kết thúc";
           } else {
@@ -128,7 +130,6 @@ exports.getStatisticSearch = function (req, res, next) {
           }
         }
       }
-      
       res.render("statistic", {
         css: "statistic",
         pageTitle: "Tra cứu thông tin",

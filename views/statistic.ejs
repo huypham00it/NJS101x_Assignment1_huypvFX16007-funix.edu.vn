@@ -110,6 +110,7 @@
         <%} %>
     </div>
     <% if(type == 'salary' && statistics.length > 0){ %>
+        <p>Thời gian làm thêm: <%= statistics.overTime.toFixed(1) %> - Thời gian làm thiếu: <%= statistics.underTime.toFixed(1) %></p>
         <h3>Tiền lương: <%= statistics.salary %></h3>
     <% } %>
 <%- include('./includes/footer.ejs') %>

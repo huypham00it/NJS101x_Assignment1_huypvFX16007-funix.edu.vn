@@ -120,6 +120,8 @@ exports.getStatisticSearch = function (req, res, next) {
           );
   
           currStatistic = [...attendStatistic, ...absentStatistic];
+          currStatistic.overTime = overTime;
+          currStatistic.underTime = underTime;
           if (typeof totalTime === "string") {
             currStatistic.salary = "Chưa kết thúc";
           } else {

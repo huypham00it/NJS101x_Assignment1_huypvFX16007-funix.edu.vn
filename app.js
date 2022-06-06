@@ -24,7 +24,7 @@ app.use(userController.loggedIn);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Define routes
+// Setting routes
 app.use(userRoutes);
 app.use(errorControllers.getError);
 

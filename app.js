@@ -102,6 +102,8 @@ app.use(errorControllers.getError);
 mongoose
   .connect(process.env.MONGODB_URL)
   .then((result) => {
-    app.listen(3000)
+    app.listen(process.env.PORT || 8000, '0.0.0.0', () => {
+      console.log("Server started");
+    })
   })
   .catch((err) => console.log(err));

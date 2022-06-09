@@ -11,27 +11,30 @@
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/assets/css/main.css" />
     <link rel="stylesheet" href="/assets/css/<%= css %>.css" />
-</head>
+  </head>
 
-<body>
-  <div class="container">
-    <div class="flex-row container-inner">
-      <div class="left-container">
-        <div class="app-name">
-          <a href="/">
-            <h1 class="app-name__text">staff management application</h1>
-          </a>
+  <body>
+    <div class="container">
+      <div class="flex-row container-inner">
+        <div class="left-container">
+          <div class="app-name">
+            <a href="/">
+              <h1 class="app-name__text">staff management application</h1>
+            </a>
             <div class="app-menu">
-              <div class="mobile-menu"><span class="line1"></span><span class="line2"></span><span class="line3"></span></div>
+              <div class="mobile-menu">
+                <span class="line1"></span><span class="line2"></span
+                ><span class="line3"></span>
+              </div>
             </div>
-        </div>
-        
+          </div>
+
           <nav>
             <ul>
+              <% if(isLoggedIn && isUser) { %>
               <li class="nav-item">
                 <a class="nav-link" href="/statistic">
-                  <div class="feature-icon lookup">
-                  </div>
+                  <div class="feature-icon lookup"></div>
                   <div class="feature-name">
                     <h2>Tra cứu thông tin giờ làm - lương</h2>
                   </div>
@@ -55,7 +58,7 @@
                   </div>
                 </a>
               </li>
-
+              
               <li class="nav-item">
                 <a class="nav-link" href="/covid">
                   <div class="feature-icon covid"></div>
@@ -64,16 +67,61 @@
                   </div>
                 </a>
               </li>
+              <% } %>
+              <% if(isManager) { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/manager/covid">
+                    <div class="feature-icon covid"></div>
+                    <div class="feature-name">
+                      <h2>Thông tin Covid cá nhân</h2>
+                    </div>
+                  </a>
+                </li>
+              <% } %>
 
+              <% if(isUser) { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/attendance-details">
+                    <div class="feature-icon confirm"></div>
+                    <div class="feature-name">
+                      <h2>Xác nhận dữ liệu giờ làm</h2>
+                    </div>
+                  </a>
+                </li>
+              <% } %>
+              <% if(isManager) { %>
+                <li class="nav-item">
+                  <a class="nav-link" href="/manager/worktime">
+                    <div class="feature-icon confirm"></div>
+                    <div class="feature-name">
+                      <h2>Xác nhận dữ liệu giờ làm</h2>
+                    </div>
+                  </a>
+                </li>
+              <% } %>
+
+              <% if(!isLoggedIn){ %>
               <li class="nav-item">
-                <a class="nav-link" href="/attendance-details">
+                <a class="nav-link" href="/login">
                   <div class="feature-icon confirm"></div>
                   <div class="feature-name">
-                    <h2>Xác nhận dữ liệu giờ làm</h2>
+                    <h2>Đăng nhập</h2>
                   </div>
                 </a>
               </li>
+              <% } %> <% if(isLoggedIn) {%>
+              <li class="nav-item">
+                <form action="/logout" method="POST">
+                  <button type="submit" class="nav-link">
+                    <div class="feature-icon logout"></div>
+                    <div class="feature-name">
+                      <h2>Đăng xuất</h2>
+                    </div>
+                  </button>
+                </form>
+              </li>
+              <% } %>
             </ul>
           </nav>
-      </div>
-      <div class="right-container">
+        </div>
+        <div class="right-container">

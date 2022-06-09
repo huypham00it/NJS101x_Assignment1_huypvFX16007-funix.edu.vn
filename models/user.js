@@ -8,12 +8,17 @@ const Schema = mongoose.Schema;
 // Create Schema
 const userSchema = new Schema({
   name: { type: String, required: true },
+  username: {type: String, required: true},
+  password: {type: String, required: true},
   dob: { type: Date, required: true },
   salaryScale: { type: Number, required: true },
   startDate: { type: Date, required: true },
   department: { type: String, required: true },
   annualLeave: { type: Number, required: true },
   image: { type: String, required: true },
+  managerId: {type: Schema.Types.ObjectId, required: true, ref: 'Manager'},
+  role: { type: String, required: true},
+  lock: {type : Boolean, required: true, default: false},
 });
 
 //Get - Change Working Status
@@ -26,7 +31,7 @@ userSchema.methods.getStatus = function (type, workplace) {
       if (type === "start") {
         return this.addAttendance(
           currAttendId,
-          new Date().toLocaleDateString(),
+          new Date(),
           new Date(),
           workplace
         )
@@ -61,6 +66,9 @@ userSchema.methods.getStatus = function (type, workplace) {
 userSchema.methods.finishAttendance = function (attendId, endTime) {
   return Attendance.findById(attendId).then((attendance) => {
     attendance.details[0].endTime = endTime;
+    attendance.details[0].total = (attendance.details[0].endTime - attendance.details[0].startTime)/3600000;
+    const totalDayTime = attendance.details.reduce((sum, item) => sum + item.total, 0);
+    attendance.totalDayTime = totalDayTime;
     return attendance.save();
   });
 };
@@ -75,7 +83,7 @@ userSchema.methods.addAttendance = function (
   if (attendId) {
     return Attendance.findById(attendId).then((attendance) => {
       // Check if the attendance is not finished
-      if (date === attendance.date) {
+      if (attendance && date.toLocaleDateString() === attendance.date.toLocaleDateString()) {
         attendance.details.unshift({
           startTime: startTime,
           endTime: null,

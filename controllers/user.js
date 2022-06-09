@@ -4,40 +4,48 @@ const Attendance = require("../models/attendance");
 
 // Get Home Page
 exports.getHome = (req, res, next) => {
+  const error = req.flash('error')[0]; 
   const user = req.user;
+  if (user && user.role == "user") {
+    return Status.findOne({ userId: user._id })
+      .then((result) => {
+        if (!result) {
+          const status = new Status({
+            userId: req.user._id,
+            workplace: "Chưa xác định",
+            isWorking: false,
+            attendId: null,
+          });
+          return status.save();
+        } else {
+          return result;
+        }
+      })
+      .then((result) => {
+        req.session.status = {
+          workplace: result.workplace,
+          isWorking: result.isWorking,
+        };
+        return req.session.save((err) => {
+          res.render("home", {
+            css: "home",
+            user: user,
+            status: req.session.status,
+            pageTitle: "Trang chủ",
+            error: error,
+          });
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
   res.render("home", {
     css: "home",
     user: user,
+    status: req.status,
     pageTitle: "Trang chủ",
+    error: error,
   });
-};
-
-// Check if user is logged in to add new status
-exports.loggedIn = function (req, res, next) {
-  User.findById("6296b493054ec37ec8d5f20b")
-    .then((user) => {
-      req.user = user;
-      return Status.findOne({ userId: user._id });
-    })
-    .then((result) => {
-      if (!result) {
-        const status = new Status({
-          userId: req.user._id,
-          workplace: "Chưa xác định",
-          isWorking: false,
-          attendId: null,
-        });
-        return status.save();
-      } else {
-        return result;
-      }
-    })
-    .then((result) => {
-      req.user.workplace = result.workplace;
-      req.user.isWorking = result.isWorking;
-      next();
-    })
-    .catch((err) => console.log(err));
 };
 
 // GEt Edit User Page
@@ -48,6 +56,8 @@ exports.getEditUser = (req, res, next) => {
         css: "edit-user",
         pageTitle: user.name,
         user: user,
+        error: req.flash("error")[0],
+        success: req.flash("success")[0],
       });
     })
     .catch((err) => console.log(err));
@@ -55,42 +65,105 @@ exports.getEditUser = (req, res, next) => {
 
 // Post edit user
 exports.postEditUser = (req, res, next) => {
-  const { id, image } = req.body;
-  User.findById(id)
+  const { id } = req.body;
+  const image = req.file;
+  if (!image) {
+    req.flash("error", "Thay đổi ảnh đại diện thất bại!");
+    return res.redirect(`/edit-user/${id}`);
+  }
+  return User.findById(id)
     .then((user) => {
-      user.image = image;
+      user.image = image.path;
       user.save();
-      res.redirect(`/edit-user/${id}`);
+      req.flash("success", "Thay đổi ảnh đại diện thành công!");
+      return res.redirect(`/edit-user/${id}`);
     })
     .catch((err) => console.log(err));
 };
 
 // Get all statistics of attendance
 exports.getStatistic = (req, res, next) => {
-  req.user.getStatistic().then((statistics) => {
-    res.render("statistic", {
-      css: "statistic",
-      pageTitle: "Tra cứu thông tin",
-      user: req.user,
-      statistics: statistics,
-      type: "details",
-    });
-  });
+  const staffId = req.user._id;
+    const datanumber = req.query.datanumber || 20;
+    const page = req.query.page || 0;
+    const month = req.query.month;
+    let start, end, totalData, attend = {}, absent={};
+    if(month){
+        start = new Date(month + '-01');
+        end = new Date(month + '-31');
+    }else {
+        start = new Date(new Date().getFullYear() + '-01-01');
+        end = new Date(new Date().getFullYear() + '-12-31');
+    }
+    Attendance.find({userId: staffId, date: {$gte: start, $lte: end}})
+    .then(attendances => {
+        attend.list = attendances.filter(attendance => !attendance.reason);
+        absent.list = attendances.filter(attendance => attendance.reason);
+
+        attend.overTime = attend.list.reduce((overTime, item) =>{
+            if(item.totalDayTime > 8){
+                return overTime + (item.totalDayTime - 8);
+            }
+            return overTime;
+        }, 0);
+        attend.underTime = attend.list.reduce((underTime, item) =>{
+            if(item.totalDayTime < 8){
+                return underTime + (8 - item.totalDayTime);
+            }
+            return underTime;
+        }, 0);
+        return Attendance.find({userId: staffId, date: {$gte: start, $lte: end}})
+        .count();
+    })
+    .then(count => {
+        totalData = count;
+        return Attendance.find({userId: staffId, date: {$gte: start, $lte: end}})
+            .sort({date: 1})
+            .populate('userId')
+            .skip(page * datanumber)
+            .limit(datanumber)
+    })
+    .then(attendances => {
+        
+        res.render('statistic-details', {
+            attendances,
+            pageTitle: 'Thống kê',
+            css: 'statistic',
+            hasNext: page < Math.ceil(totalData / datanumber) - 1,
+            hasPrev: page > 1,
+            month: month,
+            page: page,
+            absent,
+            overTime: attend.overTime,
+            underTime: attend.underTime,
+            datanumber: datanumber,
+            staffId,
+            user: req.user,
+            totalPage: Math.ceil(totalData / datanumber),
+        })
+    })
+    .catch(err => console.log(err))
 };
 
 // Get Statistic with Wildcard
 exports.getStatisticSearch = function (req, res, next) {
-  const {type, search} = req.query;
+  const { type, search } = req.query;
   req.user
     .getStatistic()
     .then((statistics) => {
       var currStatistic = [],
-      attendStatistic = [],
-      absentStatistic = [];
-      if(type == 'date'){
+        attendStatistic = [],
+        absentStatistic = [];
+      if (type == "date") {
         // Search by date
-        attendStatistic = statistics.filter(item =>  Attendance.checkSearch(search, item.date.toString()) && item.attend);
-        absentStatistic = statistics.filter(item => Attendance.checkSearch(search, item.date.toString()) && !item.attend);
+        attendStatistic = statistics.filter(
+          (item) =>
+            Attendance.checkSearch(search, item.date.toString()) && item.attend
+        );
+        absentStatistic = statistics.filter(
+          (item) =>
+            Attendance.checkSearch(search, item.date.toString()) && !item.attend
+        );
         if (attendStatistic.length > 0) {
           // Check finished/not finished
           attendStatistic.forEach((item) => {
@@ -118,7 +191,7 @@ exports.getStatisticSearch = function (req, res, next) {
             (sum, item) => sum + item.underTime,
             0
           );
-  
+
           currStatistic = [...attendStatistic, ...absentStatistic];
           currStatistic.overTime = overTime;
           currStatistic.underTime = underTime;
@@ -145,14 +218,14 @@ exports.getStatisticSearch = function (req, res, next) {
     });
 };
 
-exports.postStatisticSalary = (req, res, next) => {
-  const { date } = req.body;
-  req.user.getStatistic(type, date).then((statistics) => {
-    res.render("statistic", {
-      css: "statistic",
-      pageTitle: "Tra cứu thông tin",
-      user: req.user,
-      statistics: statistics,
-    });
-  });
-};
+// exports.postStatisticSalary = (req, res, next) => {
+//   const { date } = req.body;
+//   req.user.getStatistic(type, date).then((statistics) => {
+//     res.render("statistic", {
+//       css: "statistic",
+//       pageTitle: "Tra cứu thông tin",
+//       user: req.user,
+//       statistics: statistics,
+//     });
+//   });
+// };

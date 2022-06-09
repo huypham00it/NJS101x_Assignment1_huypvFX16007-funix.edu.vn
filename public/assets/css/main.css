@@ -1,6 +1,10 @@
 /* GOOGLE FONTS */
 @import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+:root {
+  --primary-color: #2cd0d6;
+}
+
 /* UNIVERSAL RESET */
 * {
   margin: 0;
@@ -103,6 +107,10 @@ a {
   background-image: url("/assets/images/confirm.png");
 }
 
+.logout {
+  background-image: url("/assets/images/logout.png");
+}
+
 .left-container {
   background: transparent;
 }
@@ -114,6 +122,7 @@ a {
   text-align: center;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .feature-name h2 {
@@ -138,6 +147,115 @@ a {
 .mobile-menu {
   display: none;
 }
+
+button.nav-link {
+  border: none;
+  width: 100%;
+  background: transparent;
+  cursor: pointer;
+}
+
+table {
+  margin: 0 auto;
+  width: 80%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+.warning {
+  background-color: #dfdc23;
+  color: #000;
+}
+
+.success {
+  background-color: #2cd0d6;
+}
+
+.warning,
+.success {
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  font-family: "Barlow", sans-serif;
+}
+
+tr.total {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
+
+/* pagination */
+.pagination {
+  display: flex;
+  list-style: none;
+}
+
+.page-item a {
+  text-decoration: none;
+  color: #00a8ff;
+  padding: 6px 12px;
+}
+
+.page-item a:hover,
+.page-item.active a {
+  background-color: #45b8f1;
+  color: #fff;
+}
+
+.page-link.disabled {
+  color: #ddd;
+  pointer-events: none;
+}
+
+.form-action {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+/* toast */
+.prevent-toast{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 300px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: hideToast 10s ease-in-out  forwards;
+}
+
+.prevent-toast__text{
+  font-size: 18px;
+  font-family: "Barlow", sans-serif;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.prevent-toast__icon img{
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+
+@keyframes hideToast {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* media QUERIS */
 
 @media screen and (max-width: 768px) {
   .flex-row {
@@ -197,5 +315,26 @@ a {
   .mobile-menu.active span:last-child {
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
+  }
+
+  .staffs-filter form {
+    flex-direction: column;
+}
+
+th, td {
+    padding: 5px;
+    font-size: 14px;
+}
+
+.staffs-info {
+  border-bottom: 2px solid #ddd;
+}
+
+.staffs-pagination {
+    margin-top: 40px !important;
+}
+
+  .form-action {
+    margin-top: 10px;
   }
 }

@@ -1,5 +1,5 @@
 <%- include('./includes/head.ejs') %>
-    <% if(!user.isWorking){ %>
+    <% if(!status.isWorking){ %>
         <div class="start">
             <h1>Bắt đầu công việc</h1>
             <form action="/attendance?type=start" method="POST">

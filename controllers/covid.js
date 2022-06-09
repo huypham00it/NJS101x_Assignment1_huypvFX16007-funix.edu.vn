@@ -2,29 +2,40 @@ const Covid = require("../models/covid");
 
 // Get Covid Page
 exports.getCovid = (req, res, next) => {
-  Covid.findOne({ userId: req.user._id })
-    .then((covid) => {
-      // Check if user has no covid data
-      if (!covid) {
-        const newCovid = new Covid({
-          userId: req.user._id,
-          bodyTemperatures: [],
-          vaccine: [],
-          positive: [],
+  // Check if user is staff
+  if(req.user.role == 'manager'){
+    res.render("covid", {
+      css: "covid",
+      pageTitle: "Thông tin Covid",
+      user: req.user,
+      vaccine: [],
+    });
+  }else{
+    return Covid.findOne({ userId: req.user._id })
+      .populate('userId')
+      .then((covid) => {
+        // Check if user has no covid data
+        if (!covid) {
+          const newCovid = new Covid({
+            userId: req.user._id,
+            bodyTemperatures: [],
+            vaccine: [],
+            positive: [],
+          });
+          return newCovid.save();
+        }
+        return covid;
+      })
+      .then((covid) => {
+        res.render("covid", {
+          css: "covid",
+          pageTitle: "Thông tin Covid",
+          user: covid.userId,
+          vaccine: covid.vaccine,
         });
-        return newCovid.save();
-      }
-      return covid;
-    })
-    .then((covid) => {
-      res.render("covid", {
-        css: "covid",
-        pageTitle: "Thông tin Covid",
-        user: req.user,
-        vaccine: covid.vaccine,
-      });
-    })
-    .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
 };
 
 // Post Covid Details Page
@@ -47,7 +58,7 @@ exports.postCovid = (req, res, next) => {
       return covid.save();
   })
     .then((covid) => {
-      res.redirect("/covid-details");
+      res.redirect(`/covid-details/${covid.userId}`);
     })
     .catch((err) => console.log(err));
 };
@@ -55,7 +66,8 @@ exports.postCovid = (req, res, next) => {
 // Get Covid Details Page
 exports.getCovidDetails = (req, res, next) => {
   // Get Covid Details by User
-  Covid.findOne({ userId: req.user._id })
+  Covid.findOne({ userId: req.params.userId })
+    .populate('userId')
     .then((covid) => {
       // Check if user has no covid data
       if (covid) {
@@ -74,7 +86,7 @@ exports.getCovidDetails = (req, res, next) => {
       res.render(`covid-details`, {
         css: "covid-details",
         pageTitle: "Thông tin Covid",
-        user: req.user,
+        user: covid.userId,
         covid: covid,
       });
     })

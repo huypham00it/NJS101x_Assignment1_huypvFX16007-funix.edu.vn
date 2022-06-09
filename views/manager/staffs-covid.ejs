@@ -1,0 +1,27 @@
+<%- include('../includes/head.ejs') %>
+<h1>Danh sách nhân viên</h1>
+<div class="staff-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên</th>
+                <th>Khoa</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% staffs.forEach((staff, index) => { %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= staff.name %></td>
+                <td><%= staff.department %></td>
+                <td>
+                    <a href="/covid-details/<%= staff.id %>">Xem chi tiết</a>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<%- include('../includes/footer.ejs') %>

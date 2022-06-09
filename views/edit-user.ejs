@@ -11,11 +11,17 @@
             <p>AnnualLeave: <%= user.annualLeave %></p>
         </div>
         <div class="user-image">
+            <% if(error) { %>
+                <p class="warning"><%= error %></p>
+            <% } %>
+            <% if(success) { %>
+                <p class="success"><%= success %></p>
+            <% } %>
             <div class="preview-avatar">
-                <img class="preview" src="<%= user.image %>" alt="<%= user.name %>"/>
+                <img class="preview" src="/<%= user.image %>" alt="<%= user.name %>"/>
             </div>
-            <form action="/edit-user" method="Post">
-                <input type="text" name="image" id="image" value="<%= user.image %>">
+            <form action="/edit-user" method="Post" enctype="multipart/form-data">
+                <input type="file" name="image" id="image">
                 <input type="hidden" name="id" value="<%= user._id %>">
                 <button type="submit">Save</button>
             </form>

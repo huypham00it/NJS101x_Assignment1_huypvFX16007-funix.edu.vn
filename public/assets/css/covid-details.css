@@ -30,6 +30,20 @@ th, td {
     padding: 10px;
 }
 
+.download {
+    cursor: pointer;
+    padding: 5px;
+    border: none;
+    background: var(--primary-color);
+    font-weight: bold;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.download:hover {
+    opacity: 0.8;
+}
+
 @media screen and (max-width:992px){
     section {
         width: 100%;

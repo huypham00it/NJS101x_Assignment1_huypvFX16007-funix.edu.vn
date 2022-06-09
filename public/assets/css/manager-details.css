@@ -1,0 +1,55 @@
+.right-container {
+    justify-content: flex-start;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.staffs-filter {
+    margin-bottom: 20px;
+}
+
+.staffs-filter form {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.staffs-info {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding: 3px;
+}
+
+input, 
+button,
+select {
+    border: 1px solid #ddd;
+    outline: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+
+form:last-child{
+    justify-content: flex-end;
+}
+
+button {
+    min-width: 100px;
+    background-color: #00a8ff;
+}
+
+button:hover {
+    background-color: #45b8f1;
+}
+
+.staffs-pagination {
+    margin-top: 20px;
+}
+
+.staffs-time {
+    margin-top: 10px;
+}

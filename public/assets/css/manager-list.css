@@ -1,0 +1,21 @@
+.right-container {
+    justify-content: flex-start;
+}
+
+table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.staff-wrapper {
+    padding: 10px;
+    width: 100%;
+}
+
+td a {
+    color: red;
+    text-decoration: underline;
+    padding: 5px;
+    display: inline-block;
+}
+

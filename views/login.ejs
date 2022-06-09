@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- ===== CSS ===== -->
+        <link rel="stylesheet" href="assets/css/login.css">
+
+        <!-- ===== BOX ICONS ===== -->
+        <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+        <title><%= pageTitle %></title>  
+    </head>
+    <body>
+        <div class="l-form">
+            <div class="shape1"></div>
+            <div class="shape2"></div>
+
+            <div class="form">
+                <img src="assets/images/authentication.svg" alt="" class="form__img">
+
+                <form action="/login" class="form__content" method="POST">
+                    <h1 class="form__title">Quản Lý Nhân Viên</h1>
+                    <!-- ERROR MESSAGE -->
+                    <% if(errorMessage) { %>
+                        <div class="form__error">
+                            <%= errorMessage %>
+                        </div>
+                    <% } %>
+
+                    <div class="form__div form__div-one <%= validationErrors.find(item => item.param == 'username') ? 'error' : ''%>">
+                        <div class="form__icon">
+                            <i class='bx bx-user-circle'></i>
+                        </div>
+
+                        <div class="form__div-input">
+                            <label for="" class="form__label">Tài khoản</label>
+                            <input type="text" name="username" class="form__input"
+                                value="<%= hasError ? data.username : "" %>"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form__div  <%= validationErrors.find(item => item.param == 'password') ? 'error' : ''%>">
+                        <div class="form__icon">
+                            <i class='bx bx-lock' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                            <label for="" class="form__label">Mật khẩu</label>
+                            <input type="password" name="password" class="form__input"
+                                value="<%= hasError ? data.username : "" %>"
+                            >
+                        </div>
+                    </div>
+                    <input type="submit" class="form__button" value="Login">
+
+                </form>
+            </div>
+
+        </div>
+        
+        <!-- ===== LOGIN JS ===== -->
+        <script src="assets/js/login.js"></script>
+    </body>
+</html>

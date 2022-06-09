@@ -1,0 +1,144 @@
+<%- include('../includes/head.ejs') %>
+<% if(attendances.length > 0) { %>
+    <h1><%= attendances[0].userId.name %></h1>
+<% }else { %>
+    <h1>Không có dữ liệu </h1>
+<% } %>
+<div class="staffs-filter">
+    <form action="/manager/worktime-details/<%= staffId %>" method="GET">
+        <div class="form-group">
+            <label for="date">Tháng - Năm: </label>
+            <input type="month" class="form-control" id="month" name="month" value="<%= month %>">
+        </div>
+        <div class="form-group">
+            <label for="data-number">Số ngày hiện thị: </label>
+            <select id="data-number" class="form-control" name="datanumber" value="<%= datanumber %>">
+                <option value="20" <%= datanumber == 20 ? 'selected' : ''%>>20 ngày</option>
+                <option value="30" <%= datanumber == 30 ? 'selected' : ''%>>30 ngày</option>
+                <option value="40" <%= datanumber == 40 ? 'selected' : ''%>>40 ngày</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Lọc</button>
+    </form>
+    <div class="form-action">
+        <form action="/manager/delete-worktime/<%= staffId %>" method="POST">
+            <button type="submit" class="btn btn-danger">Xóa</button>
+        </form>
+        <form action="/manager/block-user/<%= staffId %>" method="POST">
+            <input type="hidden" name="userId" value="<%= staffId %>">
+            <button type="submit" class="btn btn-danger">Khóa</button>
+        </form>
+    </div>
+</div>
+<% if(attendances.length > 0){%>
+<div class="staffs-info">
+    <table>
+        <thead>
+            <tr>
+                <th>Ngày</th>
+                <th>Nơi làm</th>
+                <th>Bắt đầu</th>
+                <th>Kết Thúc</th>
+                <th>Thời gian làm</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% attendances.forEach(attendance => { %>
+                <% if(!attendance.reason){ %>
+                    <% attendance.details.forEach((detail, index) => { %>
+                        <% if(index == 0){ %>
+                            <% if(detail.endTime){ %>
+                                <tr>
+                                    <td rowspan="<%= attendance.details.length + 1 %>"><%= attendance.date.toLocaleDateString() %></td>
+                                    <td><%= detail.workplace %></td>
+                                    <td><%= detail.startTime.toLocaleTimeString() %></td>
+                                    <td><%= detail.endTime.toLocaleTimeString() %></td>
+                                    <td><%= detail.total.toFixed(1) %></td>
+                                </tr>
+                            <% }else{ %>
+                                <tr>
+                                    <td rowspan="<%= attendance.details.length + 1 %>"><%= attendance.date.toLocaleDateString() %></td>
+                                    <td><%= detail.workplace %></td>
+                                    <td><%= detail.startTime.toLocaleTimeString() %></td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                            <% } %>
+                        <% }else{ %> 
+                            <tr>
+                                <td><%= detail.workplace %></td>
+                                <td><%= detail.startTime.toLocaleTimeString() %></td>
+                                <td><%= detail.endTime.toLocaleTimeString() %></td>
+                                <td><%= detail.total.toFixed(1) %></td>
+                            </tr>
+                        <% } %>
+                    <% }) %>
+                    <% if(attendance.details[0].endTime){ %>
+                        <tr class="total">
+                            <% if(attendance.totalDayTime > 8){ %>
+                                <td colspan="2">Thêm: <%= (attendance.totalDayTime - 8).toFixed(1) %></td>
+                            <% }else{ %>
+                                <td colspan="2">Thiếu: <%= (8 - attendance.totalDayTime).toFixed(1) %></td>
+                            <% } %>
+                            <td colspan="2">Tổng: <%= attendance.totalDayTime.toFixed(1) %></td>
+                        <tr>
+                    <% }else{ %>
+                        <tr class="total">
+                            <td colspan="4">Chưa kết thúc</td>
+                        </tr>
+                    <% } %>
+                <% } else { %> 
+                    <tr class="warning">
+                        <td><%= attendance.date.toLocaleDateString() %></td>
+                        <td colspan="4">Nghỉ</td>
+                    <tr>    
+                <% } %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<% if(month) { %>
+    <div class="staffs-time">
+        <p><%= month %>: Làm thêm: <%= overTime.toFixed(1) %>(h) - Làm thiếu: <%= underTime.toFixed(1) %>(h)</p>
+        <p>Số ngày nghỉ: <%= absent.list.length %>(d)</p>
+    </div>
+<% } %>
+<div class="staffs-pagination">
+    <ul class="pagination">
+        <% if(hasPrev) { %>
+            <li class="page-item">
+                <a class="page-link" href="/manager/worktime-details/<%= attendances[0].userId._id %>?month=<%= month %>&datanumber=<%= datanumber %>&page=<%= parseInt(page) - 1 %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+        <% } else { %>
+            <li class="page-item">
+                <a class="page-link disabled" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+        <% } %>
+        <% for(let i = 0; i < totalPage; i++){ %>
+            <li class="page-item <%= i == page ? 'active' : '' %>"><a class="page-link" href="/manager/worktime-details/<%= attendances[0].userId._id %>?month=<%= month %>&datanumber=<%= datanumber %>&page=<%= i %>"><%= i + 1 %></a></li>
+        <% } %>
+        <% if(hasNext) { %>
+            <li class="page-item">
+                <a class="page-link" href="/manager/worktime-details/<%= attendances[0].userId._id %>?month=<%= month %>&data-number=<%= datanumber %>&page=<%= parseInt(page) + 1 %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        <% } else { %>
+            <li class="page-item">
+                <a class="page-link disabled" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        <% } %>
+    </ul>
+</div>
+<% } %>
+<%- include('../includes/footer.ejs') %>

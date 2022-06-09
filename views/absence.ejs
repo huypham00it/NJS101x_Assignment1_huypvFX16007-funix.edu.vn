@@ -20,7 +20,6 @@
       <div class="form-group hours">
         <label for="date">Chọn ngày nghỉ</label>
         <input
-          type="date"
           class="form-control"
           id="date"
           name="date"
@@ -84,6 +83,11 @@
     $('#dates').multiDatesPicker({
       addDisabledDates: blockDates,
       maxPicks: maxPicks,
+    });
+
+    $('#date').multiDatesPicker({
+      addDisabledDates: blockDates,
+      maxPicks: 1
     });
     
     $('input[name="type"]').each(function(){

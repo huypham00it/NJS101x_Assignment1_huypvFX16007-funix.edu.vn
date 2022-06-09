@@ -2,10 +2,12 @@ const Attendance = require("../models/attendance");
 
 // Get Start Working Page
 exports.getAttendace = (req, res, next) => {
+  console.log(req.session.status)
   res.render("attendance", {
     css: "attendance",
     pageTitle: "Điểm danh",
     user: req.user,
+    status: req.session.status,
   });
 };
 

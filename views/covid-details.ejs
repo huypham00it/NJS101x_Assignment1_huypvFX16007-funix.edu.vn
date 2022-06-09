@@ -1,7 +1,9 @@
 <%- include('./includes/head.ejs') %>
 <h1>Thông tin Covid cá nhân</h1>
     <h2><%= user.name %></h2>
-
+    <% if(isManager) { %>
+        <a href="/manager/covid/<%= covid._id %>" class="download">Tải Xuống (PDF)</a>
+    <% } %>
     <div class="covid-detail-wrapper">
         <section class="temperature">
             <h3>Nhiệt độ cơ thể</h3>

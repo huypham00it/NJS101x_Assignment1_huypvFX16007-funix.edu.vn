@@ -266,15 +266,19 @@ tr.total {
   .flex-row {
     flex-direction: column;
   }
+  .left-container {
+    background-color: transparent;
+  }
   nav {
     border: 1.5px solid #ffffffb8;
     border-radius: 10px;
     position: fixed;
     padding: 5px;
-    top: -300px;
+    top: -400px;
     left: 10px;
     background-color: rgb(255, 255, 255);
     transition: all 0.5s ease-in-out;
+    z-index: 999;
   }
   nav.active {
     top: 70px;

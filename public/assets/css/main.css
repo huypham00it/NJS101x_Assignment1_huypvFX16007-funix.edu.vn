@@ -3,6 +3,7 @@
 
 :root {
   --primary-color: #2cd0d6;
+  --hover-navitem: rgba(255, 255, 255, 0.363);
 }
 
 /* UNIVERSAL RESET */
@@ -63,21 +64,24 @@ a {
   background-size: cover;
 }
 
-.nav-item {
-  border: 1px solid transparent;
-}
 
 .nav-item:hover {
   border-color:#ddd;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.363);
-  border-radius: 8px;
+  background-color: rgb(220 247 252);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;  
 }
 
 .nav-item {
   margin: 20px 0;
   padding: 5px 10px;
   list-style: none;
+  position: relative;
+}
+
+nav ul {
+  padding: 10px 0 10px 10px;
 }
 
 .nav-link {
@@ -112,7 +116,8 @@ a {
 }
 
 .left-container {
-  background: transparent;
+  background: #fff;
+  border-radius: 1rem;
 }
 
 .right-container {

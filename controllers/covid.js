@@ -34,7 +34,11 @@ exports.getCovid = (req, res, next) => {
           vaccine: covid.vaccine,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+      });
   }
 };
 
@@ -60,7 +64,11 @@ exports.postCovid = (req, res, next) => {
     .then((covid) => {
       res.redirect(`/covid-details/${covid.userId}`);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 // Get Covid Details Page
@@ -90,5 +98,9 @@ exports.getCovidDetails = (req, res, next) => {
         covid: covid,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };

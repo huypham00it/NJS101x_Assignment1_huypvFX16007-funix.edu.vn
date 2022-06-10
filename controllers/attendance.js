@@ -2,7 +2,6 @@ const Attendance = require("../models/attendance");
 
 // Get Start Working Page
 exports.getAttendace = (req, res, next) => {
-  console.log(req.session.status)
   res.render("attendance", {
     css: "attendance",
     pageTitle: "Điểm danh",
@@ -36,5 +35,9 @@ exports.postAttendance = (req, res, next) => {
       }
       res.redirect("/attendance-details");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };

@@ -36,7 +36,11 @@ exports.getHome = (req, res, next) => {
           });
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+      });
   }
 
   res.render("home", {
@@ -60,7 +64,11 @@ exports.getEditUser = (req, res, next) => {
         success: req.flash("success")[0],
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 // Post edit user
@@ -78,7 +86,11 @@ exports.postEditUser = (req, res, next) => {
       req.flash("success", "Thay đổi ảnh đại diện thành công!");
       return res.redirect(`/edit-user/${id}`);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 // Get all statistics of attendance
@@ -142,7 +154,11 @@ exports.getStatistic = (req, res, next) => {
             totalPage: Math.ceil(totalData / datanumber),
         })
     })
-    .catch(err => console.log(err))
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 // Get Statistic with Wildcard
@@ -214,18 +230,9 @@ exports.getStatisticSearch = function (req, res, next) {
       });
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
-// exports.postStatisticSalary = (req, res, next) => {
-//   const { date } = req.body;
-//   req.user.getStatistic(type, date).then((statistics) => {
-//     res.render("statistic", {
-//       css: "statistic",
-//       pageTitle: "Tra cứu thông tin",
-//       user: req.user,
-//       statistics: statistics,
-//     });
-//   });
-// };

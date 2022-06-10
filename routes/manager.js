@@ -2,14 +2,11 @@ const managerController = require('../controllers/manager');
 const router = require('express').Router();
 const isManager = require('../middlewares/is-manager');
 
-//
-router.get('/', isManager, managerController.getListStaff);
-
 //Staff's Covid List
 router.get('/covid', isManager, managerController.getStaffCovidList);
 
 //Get Staff Covid Detail pdf file
-router.get('/covid/:userId', isManager, managerController.getStaffCovidPDF);
+router.get('/covid/:id', isManager, managerController.getStaffCovidPDF);
 
 //Get Staff Working Time List
 router.get('/worktime', isManager, managerController.getStaffWorkTimeList);

@@ -5,12 +5,6 @@ const pdfDocument = require('pdfkit');
 const User = require('../models/user');
 const Covid = require('../models/covid');
 const Attendance = require('../models/attendance');
-const { isBuffer } = require('util');
-const { ResultWithContext } = require('express-validator/src/chain');
-
-exports.getListStaff = (req, res, next) => {
-    console.log('staff');
-};
 
 // GET STAFF LIST
 exports.getStaffCovidList = (req, res, next) => {
@@ -26,9 +20,9 @@ exports.getStaffCovidList = (req, res, next) => {
 
 // GET COVID DETAIL PDF FILE
 exports.getStaffCovidPDF = (req, res, next) => {
-    const staffId = req.params.userId;
+    const id = req.params.id;
 
-    Covid.findOne({ staffId })
+    Covid.findById({ _id: id })
         .populate('userId')
         .then((covid) => {
             if (
@@ -92,7 +86,11 @@ exports.getStaffCovidPDF = (req, res, next) => {
             });
             pdfDoc.end();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+          });
 };
 
 //GET STAFF WORKING TIME LIST
@@ -177,7 +175,11 @@ exports.getStaffWorkTimeDetail = (req, res, next) => {
                 totalPage: Math.ceil(totalData / datanumber),
             });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+          });
 };
 
 // BLOCK STAFF
@@ -200,17 +202,21 @@ exports.blockStaff = (req, res, next) => {
         .then((result) => {
             res.redirect('/manager/worktime-details/' + staffId);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+          });
 };
 
 // DELETE WORKING TIME
 exports.deleteWorktime = (req, res, next) => {
-    const staffId = req.params.userId;
-    Attendance.find({ userId: staffId })
+    const userId = req.params.userId;
+    Attendance.find({ userId: userId })
         .populate('userId')
         .then((attendances) => {
             attendances.forEach((attendance) => {
-                if (attendance.details[0].endTime) {
+                if (attendance.details.length > 0 && attendance.details[0].endTime) {
                     return attendance.remove();
                 }
             });
@@ -221,7 +227,11 @@ exports.deleteWorktime = (req, res, next) => {
             return req.session.save();
         })
         .then((result) => {
-            res.redirect('/manager/worktime-details/' + staffId);
+            res.redirect('/manager/worktime-details/' + userId);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+          });
 };

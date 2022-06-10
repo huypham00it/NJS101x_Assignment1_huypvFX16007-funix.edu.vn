@@ -61,7 +61,9 @@ exports.postLogin = (req, res, next) => {
               errorMessage: "Mật khẩu không đúng!",
             });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            return res.redirect("/login");
+          });
       }
 
       return Manager.findOne({ username: username }).then((manager) => {
@@ -91,7 +93,9 @@ exports.postLogin = (req, res, next) => {
                 errorMessage: "Mật khẩu không đúng!",
               });
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+              return res.redirect("/login");
+            });
         }
 
         return res.status(422).render("login", {
@@ -104,12 +108,14 @@ exports.postLogin = (req, res, next) => {
         });
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      return res.redirect("/login");
+    });
 };
 
 //Post logout
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
-    res.redirect('/');
+    res.redirect('/login');
   });
 }

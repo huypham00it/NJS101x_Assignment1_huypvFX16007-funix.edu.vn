@@ -109,7 +109,7 @@ form button {
     background-color: #00a8ff;
 }
 
-form button:hover {
+form button.btn:hover {
     background-color: #45b8f1;
 }
 

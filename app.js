@@ -89,14 +89,15 @@ app.use((req, res, next) => {
   req.status = status;
   next();;
 })
-// // Check status of user
-// app.use(isAuth, userController.checkStatus);
 
 // Setting routes
 app.use('/manager', isAuth, managerRoutes)
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(errorControllers.getError);
+app.use((error, req, res, next) => {
+  res.status(500).render('500', { pageTitle: 'Error!', css: '500.css' });
+})
 
 // Connect to MongoDB
 mongoose

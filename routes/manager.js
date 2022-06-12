@@ -16,6 +16,6 @@ router.get('/worktime-details/:staffId', isManager, managerController.getStaffWo
 //Block User
 router.post('/block-user/:userId', isManager, managerController.blockStaff);
 //Block User
-router.post('/delete-worktime/:userId', isManager, managerController.deleteWorktime);
+router.delete('/delete-worktime/:userId', isManager, managerController.deleteWorktime);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+'use strict'
 const fs = require('fs');
 const path = require('path');
 const pdfDocument = require('pdfkit');
@@ -106,7 +107,7 @@ exports.getStaffWorkTimeList = (req, res, next) => {
 };
 
 // GET STAFF WORKING TIME ITEM
-exports.getStaffWorkTimeDetail = (req, res, next) => {
+exports.getStaffWorkTimeDetail = (req, res) => {
     const staffId = req.params.staffId;
     const datanumber = req.query.datanumber || 20;
     const page = req.query.page || 0;
@@ -123,69 +124,72 @@ exports.getStaffWorkTimeDetail = (req, res, next) => {
         start = new Date(new Date().getFullYear() + '-01-01');
         end = new Date(new Date().getFullYear() + '-12-31');
     }
-    Attendance.find({ userId: staffId, date: { $gte: start, $lte: end } })
-        .then((attendances) => {
-            attend.list = attendances.filter(
-                (attendance) => !attendance.reason
-            );
-            absent.list = attendances.filter((attendance) => attendance.reason);
 
-            attend.overTime = attend.list.reduce((overTime, item) => {
-                if (item.totalDayTime > 8) {
-                    return overTime + (item.totalDayTime - 8);
-                }
-                return overTime;
-            }, 0);
-            attend.underTime = attend.list.reduce((underTime, item) => {
-                if (item.totalDayTime < 8) {
-                    return underTime + (8 - item.totalDayTime);
-                }
-                return underTime;
-            }, 0);
-            return Attendance.find({
-                userId: staffId,
-                date: { $gte: start, $lte: end },
-            }).count();
-        })
-        .then((count) => {
-            totalData = count;
-            return Attendance.find({
-                userId: staffId,
-                date: { $gte: start, $lte: end },
+    Attendance.find({ userId: staffId, date: { $gte: start, $lte: end } })
+            .then((attendances) => {
+                attend.list = attendances.filter(
+                    (attendance) => !attendance.reason
+                );
+                absent.list = attendances.filter((attendance) => attendance.reason);
+
+                attend.overTime = attend.list.reduce((overTime, item) => {
+                    if (item.totalDayTime > 8) {
+                        return overTime + (item.totalDayTime - 8);
+                    }
+                    return overTime;
+                }, 0);
+                attend.underTime = attend.list.reduce((underTime, item) => {
+                    if (item.totalDayTime < 8) {
+                        return underTime + (8 - item.totalDayTime);
+                    }
+                    return underTime;
+                }, 0);
+                return Attendance.find({
+                    userId: staffId,
+                    date: { $gte: start, $lte: end }
+                }).count();
             })
-                .sort({ date: 1 })
-                .populate('userId')
-                .skip(page * datanumber)
-                .limit(datanumber);
-        })
-        .then((attendances) => {
-            res.render('manager/worktime-details', {
-                attendances,
-                pageTitle: 'Thời gian làm việc',
-                css: 'manager-details',
-                hasNext: page < Math.ceil(totalData / datanumber) - 1,
-                hasPrev: page > 1,
-                month: month,
-                page: page,
-                absent,
-                overTime: attend.overTime,
-                underTime: attend.underTime,
-                datanumber: datanumber,
-                staffId,
-                totalPage: Math.ceil(totalData / datanumber),
-            });
-        })
-        .catch((err) => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
-          });
+            .then((count) => {
+                totalData = count;
+                return Attendance.find({
+                    userId: staffId,
+                    date: { $gte: start, $lte: end },
+                })
+                    .sort({ date: 1 })
+                    .populate('userId')
+                    .skip(page * datanumber)
+                    .limit(datanumber);
+            })
+            .then(async (attendances) => {
+                const user = await User.findById(staffId);
+                res.render('manager/worktime-details', {
+                    attendances,
+                    pageTitle: 'Thời gian làm việc',
+                    css: 'manager-details',
+                    hasNext: page < Math.ceil(totalData / datanumber) - 1,
+                    hasPrev: page > 1,
+                    month: month,
+                    page: page,
+                    absent,
+                    overTime: attend.overTime,
+                    underTime: attend.underTime,
+                    datanumber: datanumber,
+                    staffId,
+                    totalPage: Math.ceil(totalData / datanumber),
+                    user
+                });
+            })
+            .catch(err => console.log(err))
+            // .catch((err) => {
+            //     const error = new Error(err);
+            //     error.httpStatusCode = 500;
+            //     return next(error);
+            // });
 };
 
 // BLOCK STAFF
 exports.blockStaff = (req, res, next) => {
     const staffId = req.params.userId;
-    console.log(staffId);
     User.findById(staffId)
         .then((staff) => {
             if (!staff) {
@@ -200,7 +204,7 @@ exports.blockStaff = (req, res, next) => {
             return staff.save();
         })
         .then((result) => {
-            res.redirect('/manager/worktime-details/' + staffId);
+            res.status(200).json({msg: "Khóa tài khoản thành công!"})
         })
         .catch((err) => {
             const error = new Error(err);
@@ -216,7 +220,7 @@ exports.deleteWorktime = (req, res, next) => {
         .populate('userId')
         .then((attendances) => {
             attendances.forEach((attendance) => {
-                if (attendance.details.length > 0 && attendance.details[0].endTime) {
+                if (attendance.details.length > 0 && attendance.details[0].endTime || attendance.reason) {
                     return attendance.remove();
                 }
             });
@@ -227,7 +231,7 @@ exports.deleteWorktime = (req, res, next) => {
             return req.session.save();
         })
         .then((result) => {
-            res.redirect('/manager/worktime-details/' + userId);
+            res.status(200).json({msg: "Xoá dữ liệu thành công!"})
         })
         .catch((err) => {
             const error = new Error(err);

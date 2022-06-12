@@ -21,12 +21,19 @@
         <button type="submit" class="btn btn-primary">Lọc</button>
     </form>
     <div class="form-action">
-        <form action="/manager/delete-worktime/<%= staffId %>" method="POST">
-            <button type="submit" class="btn btn-danger">Xóa</button>
-        </form>
-        <form action="/manager/block-user/<%= staffId %>" method="POST">
+        <form action="" method="">
             <input type="hidden" name="userId" value="<%= staffId %>">
-            <button type="submit" class="btn btn-danger">Khóa</button>
+            <% if(attendances.length > 0) { %>
+                <button type="button" data-type="delete" onclick="manageAction(this)" class="btn btn-danger">Xóa</button>
+            <% } %>
+        </form>
+        <form action="" method="">
+            <input type="hidden" name="userId" value="<%= staffId %>">
+            <% if(user.lock){ %>
+                <button type="button" class="btn btn-disabled">Khóa</button>
+            <% }else { %>
+                <button type="button" data-type="block" onclick="manageAction(this)" class="btn btn-danger">Khóa</button>
+            <% } %>
         </form>
     </div>
 </div>
@@ -141,4 +148,6 @@
     </ul>
 </div>
 <% } %>
+<%- include('../includes/modal.ejs') %>
+<script src="/assets/js/worktime.js"></script>
 <%- include('../includes/footer.ejs') %>

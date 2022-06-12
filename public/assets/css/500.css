@@ -2,4 +2,8 @@ body {
     display: flex;
     justify-content: center;
     text-align: center;
+    padding: 1rem;
+    background: url(https://img.freepik.com/free-vector/blue-pink-halftone-background_53876-99004.jpg?w=996&t=st=1653636168~exp=1653636768~hmac=24b46e7…);
+    background-size: cover;
+    min-height: 100vh;
 }

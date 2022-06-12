@@ -42,8 +42,8 @@ button {
     background-color: #00a8ff;
 }
 
-button:hover {
-    background-color: #45b8f1;
+.btn:hover {
+    background-color: #00a8ff;
 }
 
 .staffs-pagination {

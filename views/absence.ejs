@@ -5,6 +5,11 @@
   <h3>Số ngày nghỉ còn lại: <%= Math.floor(user.annualLeave) %></h3>
   <% if( Math.floor(user.annualLeave) > 0) {%>
   <div class="absence-select">
+    <% if(hasError) {%>
+    <div class="error-message">
+      <%= errorMessage %>
+    </div>
+    <% } %>
     <form action="/absence" method="POST">
       <div class="select-type">
         <div class="form-group">

@@ -6,6 +6,7 @@ const attendanceController = require('../controllers/attendance');
 const isAccess = require('../middlewares/is-access');
 const isAuth = require('../middlewares/is-auth');
 const multer = require('multer');
+const { body } = require('express-validator');
 
 
 const fileStorage = multer.diskStorage({
@@ -47,7 +48,10 @@ router.post('/attendance',isAuth, isAccess, attendanceController.postAttendance)
 
 // Absence Page 
 router.get('/absence',isAuth, isAccess, absenceController.getAbsence);
-router.post('/absence',isAuth, isAccess, absenceController.postAbsence);
+router.post('/absence',
+body('reason', 'Bạn phải nhập lý do nghỉ!!')
+.notEmpty()
+,isAuth, isAccess, absenceController.postAbsence);
 
 // Covid Page 
 router.get('/covid',isAuth, covidController.getCovid);

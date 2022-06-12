@@ -72,7 +72,7 @@ exports.getStaffCovidPDF = (req, res, next) => {
                     .fontSize(16)
                     .text(
                         'Mũi ' +
-                            index +
+                            (index + 1) +
                             ' : ' +
                             item.date.toLocaleDateString() +
                             ' - Tên Vaccine: ' +
@@ -179,12 +179,11 @@ exports.getStaffWorkTimeDetail = (req, res) => {
                     user
                 });
             })
-            .catch(err => console.log(err))
-            // .catch((err) => {
-            //     const error = new Error(err);
-            //     error.httpStatusCode = 500;
-            //     return next(error);
-            // });
+            .catch((err) => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
+            });
 };
 
 // BLOCK STAFF

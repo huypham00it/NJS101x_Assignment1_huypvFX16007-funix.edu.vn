@@ -1,6 +1,7 @@
 const Absence = require("../models/absence");
 const Attendance = require("../models/attendance");
 const User = require("../models/user");
+const {validationResult} = require('express-validator');
 
 // GET Absence Page
 exports.getAbsence = (req, res, next) => {
@@ -18,6 +19,8 @@ exports.getAbsence = (req, res, next) => {
         pageTitle: "Đăng ký nghỉ phép",
         user: req.user,
         disabledDates: disabledDates,
+        hasError: false,
+        errorMessage: ''
       });
     })
     .catch((err) => {
@@ -30,6 +33,16 @@ exports.getAbsence = (req, res, next) => {
 // RESIGER Absence
 exports.postAbsence = (req, res, next) => {
   const { type, date, hours, dates, reason } = req.body;
+  const errors = validationResult(req).array()
+  if (errors.length > 0) {
+    return res.status(422).render("absence", {
+      css: "absence",
+      pageTitle: "Đăng kỳ nghỉ phép",
+      hasError: true,
+      validationErrors: errors,
+      errorMessage: errors[0].msg,
+    });
+  }
   //Add the absence to the database
   Attendance.addAbsence(req.user._id, type, date, hours, dates, reason)
     .then((result) => {
